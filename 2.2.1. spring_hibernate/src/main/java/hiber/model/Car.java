@@ -18,7 +18,7 @@ public class Car {
     private int series;
 
 
-    @ManyToMany(mappedBy = "cars")
+    @OneToOne(mappedBy = "cars")
     private List<User>users;
 
     public Car() {
