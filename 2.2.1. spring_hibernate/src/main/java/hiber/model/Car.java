@@ -1,7 +1,6 @@
 package hiber.model;
 
 import javax.persistence.*;
-import java.util.*;
 
 @Entity
 @Table(name = "cars")
@@ -11,40 +10,33 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "model")
-    private String model;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "series")
     private int series;
 
+    @OneToOne(mappedBy = "car", cascade = CascadeType.ALL)
+    private User user;
 
-    @OneToOne(mappedBy = "cars")
-    private List<User>users;
+    public Car(){}
 
-    public Car() {
-    }
-
-
-
-
-
-    public Car(Long id,String model, int series) {
-        this.model = model;
-        this.series = series;
-        this.id = id;
-    }
-
-    public Car(String model, int series) {
-        this.model = model;
+    public Car(String name, int series){
+        this.name = name;
         this.series = series;
     }
 
-    public String getModel() {
-        return model;
+    public Long getId() {
+        return id;
     }
 
-    public void setModel(String model) {
-        this.model = model;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getSeries() {
@@ -55,32 +47,11 @@ public class Car {
         this.series = series;
     }
 
-    public Long getId() {
-        return id;
+    public User getUser() {
+        return user;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return "Car{" +
-                "model='" + model + '\'' +
-                ", series=" + series +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Car car = (Car) o;
-        return series == car.series && Objects.equals(id, car.id) && model.equals(car.model);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, model, series);
+    public void setUser(User user) {
+        this.user = user;
     }
 }

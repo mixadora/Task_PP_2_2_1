@@ -3,52 +3,46 @@ package hiber.dao;
 import hiber.model.Car;
 import hiber.model.User;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.*;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
 public class UserDaoImp implements UserDao {
 
-   @PersistenceContext
-   protected EntityManager entityManager;
+   @Autowired
+   private SessionFactory sessionFactory;
 
    @Override
    public void add(User user) {
-      entityManager.merge(user);
+      sessionFactory.getCurrentSession().save(user);
    }
 
    @Override
-   public void addCar(Car car) {
-      entityManager.merge(car);
-   }
-
-   public User getUser(Long id){
-      return entityManager.find(User.class, id) ;
+   public void add(Car car) {
+      sessionFactory.getCurrentSession().save(car);
    }
 
    @Override
-   public Car getCar(Long id) {
-      return entityManager.find(Car.class, id) ;
+   public User getUserForCarId(long id_car) {
+      String hql = "FROM User as u WHERE u.car.id = '" + id_car + "'";
+      return (User) sessionFactory.getCurrentSession().createQuery(hql).getSingleResult();
+   }
+
+   @Override
+   public User getUserForCarSeries(int series_car) {
+      String hql = "FROM User as u WHERE u.car.series = '" + series_car + "'";
+      return (User) sessionFactory.getCurrentSession().createQuery(hql).getSingleResult();
    }
 
    @Override
    @SuppressWarnings("unchecked")
    public List<User> listUsers() {
-      Query query = entityManager.createQuery("select u from User u ");
+      TypedQuery<User> query=sessionFactory.getCurrentSession().createQuery("from User");
       return query.getResultList();
    }
-
-   @Override
-   @SuppressWarnings("unchecked")
-   public List<User> getUserByCar(String model, int series) {
-      Query query = entityManager.createQuery("select u from User u where u.car.model= :paramModel and u.car.series= :paramSeries");
-      query.setParameter("paramModel", model);
-      query.setParameter("paramSeries", series);
-      return query.getResultList();
-   }
-
 
 }

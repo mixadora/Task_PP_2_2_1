@@ -23,8 +23,20 @@ public class UserServiceImp implements UserService {
 
    @Transactional
    @Override
-   public void addCar(Car car) {
-      userDao.addCar(car);
+   public void add(Car car) {
+      userDao.add(car);
+   }
+
+   @Transactional
+   @Override
+   public User getUserForCarId(long id_car) {
+      return userDao.getUserForCarId(id_car);
+   }
+
+   @Transactional
+   @Override
+   public User getUserForCarSeries(int series_car) {
+      return userDao.getUserForCarSeries(series_car);
    }
 
    @Transactional(readOnly = true)
@@ -33,19 +45,4 @@ public class UserServiceImp implements UserService {
       return userDao.listUsers();
    }
 
-   @Transactional(readOnly = true)
-   @Override
-   public List<User> getUserByCar(String model, int series) {
-      return userDao.getUserByCar(model, series);
-   }
-   @Transactional
-   @Override
-   public Car getCar(Long id) {
-      return userDao.getCar(id);
-   }
-   @Transactional
-   @Override
-   public User getUser(Long id) {
-      return userDao.getUser(id);
-   }
 }
