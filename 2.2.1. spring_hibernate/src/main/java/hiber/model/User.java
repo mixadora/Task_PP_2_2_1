@@ -20,7 +20,7 @@ public class User {
    @Column(name = "email")
    private String email;
 
-   @ManyToMany(fetch = FetchType.EAGER,
+   @OneToOne(fetch = FetchType.EAGER,
            cascade = {CascadeType.PERSIST,CascadeType.MERGE})
    private List<Car> cars = new ArrayList<>();
 
