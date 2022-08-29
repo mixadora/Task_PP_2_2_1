@@ -1,7 +1,6 @@
 package hiber.model;
 
 import javax.persistence.*;
-import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -20,9 +19,9 @@ public class User {
    @Column(name = "email")
    private String email;
 
-   @OneToOne(fetch = FetchType.EAGER,
-           cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-   private List<Car> cars = new ArrayList<>();
+   @OneToOne(cascade = CascadeType.ALL)
+   @JoinColumn(name = "car_id")
+   private Car car;
 
 
 
@@ -34,13 +33,18 @@ public class User {
       this.email = email;
    }
 
-   public User(String firstName, String lastName, String email, List<Car> cars) {
+   public User(String firstName, String lastName, String email, Car car) {
       this(firstName, lastName, email);
-      this.cars = cars;
+      this.car = car;
    }
 
-   public User(String firstName) {
-      this.firstName = firstName;
+
+   public Car getCar() {
+      return car;
+   }
+
+   public void setCar(Car car) {
+      this.car = car;
    }
 
    public Long getId() {
@@ -75,18 +79,6 @@ public class User {
       this.email = email;
    }
 
-   public List<Car> getCars() {
-      return cars;
-   }
-
-   public void setCars(List<Car> cars) {
-      this.cars = cars;
-   }
-
-   public void addCar(Car car){
-      cars.add(car);
-   }
-
    @Override
    public String toString() {
       return "User{" +
@@ -94,20 +86,7 @@ public class User {
               ", firstName='" + firstName + '\'' +
               ", lastName='" + lastName + '\'' +
               ", email='" + email + '\'' +
-              ", cars=" + cars.toString() +
+              ", car=" + car.getName() +
               '}';
-   }
-
-   @Override
-   public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-      User user = (User) o;
-      return Objects.equals(id, user.id) && firstName.equals(user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(cars, user.cars);
-   }
-
-   @Override
-   public int hashCode() {
-      return Objects.hash(id, firstName, lastName, email, cars);
    }
 }
